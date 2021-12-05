@@ -1,6 +1,6 @@
 {
   "name": "@tinqjs/tinjs-http",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "tin js http plugin",
   "main": "dist/index.js",
   "author": "bejorock",
@@ -16,5 +16,9 @@
   "scripts": {
     "build": "node esbuild.config.js",
     "package": "npm publish ./dist --access public"
-  }
+  },
+  "keywords": [
+    "node",
+    "http"
+  ]
 }
