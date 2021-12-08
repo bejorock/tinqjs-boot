@@ -1,39 +1,62 @@
-import { RequestListener } from "http";
 import path from "path";
-import http from "http";
-import os from "os";
+import fs from "fs";
 
-export default function createHttpServer(handler: RequestListener) {
-  const PATH = path.join(
-    os.platform() === "win32" ? "\\\\?\\pipe" : "/tmp",
-    process.argv[2] || "default"
+export { default as createHttpService } from "./createHttpService";
+export { default as createHttpRoutes } from "./createHttpRoutes";
+export { default as createAmqpService } from "./createAmqpService";
+export { default as createAmqpSubs } from "./createAmqpSubs";
+export * from "./types";
+export * from "./http/httpParams";
+export * from "./amqp/amqpChannel";
+export * from "./amqp/amqpConnect";
+export * from "./amqp/amqpQueue";
+export * from "./amqp/amqpExchange";
+
+export default function main(boot: (config: any) => Promise<void>) {
+  const config = JSON.parse(
+    fs.readFileSync(
+      path.resolve(process.cwd(), "tinqjs-service.config.json"),
+      "utf-8"
+    )
   );
 
-  const server = http.createServer(handler);
+  // this.name = "hello";
 
-  if (process.send || process.env.CHILD) {
-    process.send({ socketPath: PATH });
-
-    // graceful shutdown
-    const shutdown = () => {
-      console.log("shutting down slave");
-      server.close();
+  boot
+    .bind(this)(config)
+    .catch((err) => {
+      console.log(err);
+      if (process.send) process.send({ type: "shutdown" });
 
       process.exit();
-    };
-
-    // process.on("beforeExit", shutdown);
-    process.on("SIGINT", shutdown);
-
-    process.on("message", (message) => {
-      if (message === "shutdown") {
-        shutdown();
-      }
     });
-  }
-
-  return function listen(port: number, cb: () => void) {
-    if (process.send || process.env.CHILD) server.listen(PATH, cb);
-    else server.listen(port, cb);
-  };
 }
+
+const shutdown = () => {
+  const config = JSON.parse(
+    fs.readFileSync(
+      path.resolve(process.cwd(), "tinqjs-service.config.json"),
+      "utf-8"
+    )
+  );
+
+  console.log(config.name, " : shutting down tinqjs service...");
+
+  process.exit();
+};
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.log(reason);
+
+  if (process.send) process.send({ type: "shutdown" });
+
+  process.exit();
+});
+
+process.on("message", ({ type }) => {
+  if (type === "shutdown") shutdown();
+});
+
+process.on("SIGINT", shutdown);
+process.on("SIGHUP", shutdown);
+process.on("SIGTERM", shutdown);
