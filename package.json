@@ -20,6 +20,10 @@
     "amqplib": "^0.8.0"
   },
   "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bejorock/tinqjs-boot.git"
+  },
   "scripts": {
     "build": "node esbuild.config.js",
     "package": "npm publish ./dist --access public"
