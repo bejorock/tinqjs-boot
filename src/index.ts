@@ -14,6 +14,7 @@ export * from "./amqp/amqpExchange";
 export * from "./amqp/amqpPublish";
 export * from "./hooks/useBlockingQueue";
 export * from "./hooks/useChannel";
+export * from "./context";
 
 export default function main(boot: (config: any) => Promise<void>) {
   const config = JSON.parse(

@@ -1,6 +1,8 @@
 import EventEmitter from "events";
 
-export function useChannel(initialData: any[] = []): any[] {
+export function useChannel<T>(
+  initialData: T[] = []
+): [() => AsyncGenerator<T, never, unknown>, (item: T) => void] {
   const data = [...initialData];
   const mainEvent = new EventEmitter();
 
