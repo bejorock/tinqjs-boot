@@ -11,6 +11,9 @@ export * from "./amqp/amqpChannel";
 export * from "./amqp/amqpConnect";
 export * from "./amqp/amqpQueue";
 export * from "./amqp/amqpExchange";
+export * from "./amqp/amqpPublish";
+export * from "./hooks/useBlockingQueue";
+export * from "./hooks/useChannel";
 
 export default function main(boot: (config: any) => Promise<void>) {
   const config = JSON.parse(
@@ -28,7 +31,7 @@ export default function main(boot: (config: any) => Promise<void>) {
       console.log(err);
       if (process.send) process.send({ type: "shutdown" });
 
-      process.exit();
+      process.nextTick(() => process.exit());
     });
 }
 

@@ -31,7 +31,7 @@ async function buildEsm(files_) {
       outfile: "dist/index.js",
       format: "cjs",
       platform: "node",
-      target: "es6",
+      target: "esnext",
       // inject: ["./react-shim.js"],
       entryPoints: files_,
       ...esbuildOptions,

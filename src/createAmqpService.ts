@@ -1,6 +1,7 @@
 import amqplib from "amqplib/callback_api";
 import { amqpChannel } from "./amqp/amqpChannel";
 import { amqpConnect } from "./amqp/amqpConnect";
+import { amqpEvent } from "./context";
 
 export default async function createAmqpService(host: string) {
   const conn = await amqpConnect(host);
@@ -18,5 +19,17 @@ export default async function createAmqpService(host: string) {
     });
   };
 
-  return { channel, close };
+  amqpEvent.on("publish", (envelope) => {
+    // console.log(envelope);
+    channel.publish(
+      envelope.topic,
+      envelope.key,
+      Buffer.from(JSON.stringify(envelope)),
+      {
+        persistent: true,
+      }
+    );
+  });
+
+  return { channel, conn, close };
 }
