@@ -1,6 +1,6 @@
 {
-  "name": "@tinqjs/tinqjs-boot",
-  "version": "0.1.1",
+  "name": "@tinqjs/tinjs-boot",
+  "version": "0.1.2",
   "description": "tinq js module bootstrap",
   "main": "dist/index.js",
   "author": "bejorock",

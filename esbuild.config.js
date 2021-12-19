@@ -8,6 +8,7 @@ const {
   version,
   author,
   keywords,
+  repository,
 } = require("./package.json");
 const { Generator } = require("npm-dts");
 
@@ -65,6 +66,7 @@ buildEsm(files)
           peerDependencies,
           dependencies,
           keywords,
+          repository,
         },
         null,
         2
