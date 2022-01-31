@@ -4,6 +4,7 @@ import { amqpExchange } from "./amqp/amqpExchange";
 import { amqpQueue } from "./amqp/amqpQueue";
 import { useBlockingQueue } from "./hooks/useBlockingQueue";
 import { useChannel } from "./hooks/useChannel";
+import { logger } from "./logger";
 
 export default async function createAmqpSubs(
   channel: amqp.Channel,
@@ -34,14 +35,9 @@ export default async function createAmqpSubs(
       alias = alias.replace(paramsPattern, "$1$2$3");
     }
 
-    // console.log(key, params);
-
     for (let queueName in module) {
       // queueName = `${queueName.toLowerCase()}.${alias}`;
 
-      // console.log(queueName);
-
-      // console.log(queueName, module[queueName]);
       const queue = await amqpQueue(
         channel,
         `${queueName.toLowerCase()}.${alias}`,
@@ -59,17 +55,15 @@ export default async function createAmqpSubs(
         for await (let message of messages()) {
           await module[queueName](message);
         }
-      })().catch((err) => console.log(err));
+      })().catch((err) => logger.error(err));
 
       channel.consume(
         queue.queue,
         function (msg) {
-          console.log(`Receive message for key ${msg.fields.routingKey}`);
+          logger.info(`Receive message for key ${msg.fields.routingKey}`);
 
           let routingKeyTokens = msg.fields.routingKey.split(".");
           let keyTokens = key.split(".");
-
-          // console.log(routingKeyTokens, keyTokens);
 
           let counter = 0;
           const paramValues: any = {};
@@ -83,7 +77,7 @@ export default async function createAmqpSubs(
           try {
             envelope = JSON.parse(envelope);
           } catch (e) {
-            console.log(`Not a json message`);
+            logger.error(`Not a json message`);
           }
 
           pushMessage({ body: envelope.content, params: paramValues });
@@ -95,7 +89,7 @@ export default async function createAmqpSubs(
         }
       );
 
-      console.log(
+      logger.info(
         `Ready queue ${queueName.toLowerCase()}.${alias} of topic ${topic}`
       );
     }

@@ -25,7 +25,7 @@
     "url": "https://github.com/bejorock/tinqjs-boot.git"
   },
   "scripts": {
-    "build": "node esbuild.config.js",
+    "build": "npx node ./esbuild.config.js",
     "package": "npm publish ./dist --access public"
   },
   "keywords": [

@@ -1,0 +1,550 @@
+openapi: "3.0.3"
+info:
+  title: "Authorization Services"
+  version: "1.0.0"
+servers:
+  - url: "http://localhost:3000"
+    description: "development server"
+tags:
+  - name: "Authorization"
+    description: "Authorization Module"
+  - name: "User"
+    description: "User Resources"
+  - name: "Role"
+    description: "Role Resources"
+paths:
+  /api/role:
+    get:
+      operationId: findMany
+      tags:
+        - "Role"
+      summary: "Role.findMany"
+      parameters:
+        - name: "filter"
+          in: "query"
+          description: "Query params"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Find many roles"
+          content:
+            "application/json":
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Role"
+      security:
+        - jwt_bearer: ["user:read"]
+    post:
+      operationId: createRole
+      tags:
+        - "Role"
+      summary: "Role.createRole"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/RoleInput"
+      responses:
+        "200":
+          description: "Success create a role"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Role"
+        "400":
+          description: "Duplicate role"
+      security:
+        - jwt_bearer: ["role:create"]
+    put:
+      operationId: updateMany
+      tags:
+        - "Role"
+      summary: "Role.updateMany"
+      parameters:
+        - name: "filter"
+          in: "query"
+          description: "Query params"
+          required: false
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/RoleInput"
+      responses:
+         "200":
+          description: "Success update many roles"
+          content:
+            "application/json":
+              schema:
+                type: "number"
+      security:
+        - jwt_bearer: ["role:update"]
+  /api/role/:id:
+    get:
+      operationId: findById
+      tags:
+        - "Role"
+      summary: "Role.findById"
+      responses:
+        "200":
+          description: "Return a role"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Role"
+      security:
+        - jwt_bearer: ["role:read", "owner:read"]
+    put:
+      operationId: updateRole
+      tags:
+        - "Role"
+      summary: "Role.updateRole"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/RoleInput"
+      responses:
+        "200":
+          description: "Success update a role"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Role"
+        "400":
+          description: "Duplicate role"
+      security:
+        - jwt_bearer: ["role:update", "owner:update"]
+    delete:
+      operationId: deleteRole
+      tags:
+        - "Role"
+      summary: "Role.deleteRole"
+      responses:
+        "200":
+          description: "Success delete a role"
+      security:
+        - jwt_bearer: ["role:delete"]
+  /api/role/findOne:
+    get:
+      operationId: findOne
+      tags:
+        - "Role"
+      summary: "Role.findOne"
+      parameters:
+        - name: "where"
+          in: "query"
+          description: "Query where params"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Return a role"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Role"
+      security:
+        - jwt_bearer: ["role:read"]
+  /api/user:
+    get:
+      operationId: findMany
+      tags:
+        - "User"
+      summary: "User.findMany"
+      parameters:
+        - name: "filter"
+          in: "query"
+          description: "Query params"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Find many users"
+          content:
+            "application/json":
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
+      security:
+        - jwt_bearer: ["user:read"]
+    post:
+      operationId: createUser
+      tags:
+        - "User"
+      summary: "User.createUser"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "200":
+          description: "Success create a user"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: "Duplicate user"
+      security:
+        - jwt_bearer: ["user:create"]
+    put:
+      operationId: updateMany
+      tags:
+        - "User"
+      summary: "User.updateMany"
+      parameters:
+        - name: "filter"
+          in: "query"
+          description: "Query params"
+          required: false
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+         "200":
+          description: "Success update many users"
+          content:
+            "application/json":
+              schema:
+                type: "number"
+      security:
+        - jwt_bearer: ["user:update"]
+  /api/user/:id:
+    get:
+      operationId: findById
+      tags:
+        - "User"
+      summary: "User.findById"
+      responses:
+        "200":
+          description: "Return a user"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/User"
+      security:
+        - jwt_bearer: ["user:read", "owner:read"]
+    put:
+      operationId: updateUser
+      tags:
+        - "User"
+      summary: "User.updateUser"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "200":
+          description: "Success update a user"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: "Duplicate user"
+      security:
+        - jwt_bearer: ["user:update", "owner:update"]
+    delete:
+      operationId: deleteUser
+      tags:
+        - "User"
+      summary: "User.deleteUser"
+      responses:
+        "200":
+          description: "Success delete a user"
+      security:
+        - jwt_bearer: ["user:delete"]
+  /api/user/:id/changePassword:
+    put:
+      operationId: changePassword
+      tags:
+        - "User"
+      summary: "User.changePassword"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: "object"
+              required:
+                - "password"
+                - "confirm_password"
+              properties:
+                password:
+                  type: "string"
+                confirm_password:
+                  type: "string"
+      responses:
+         "200":
+          description: "Success change user's password"
+      security:
+        - jwt_bearer: ["owner:update"]
+  /api/user/findOne:
+    get:
+      operationId: findOne
+      tags:
+        - "User"
+      summary: "User.findOne"
+      parameters:
+        - name: "where"
+          in: "query"
+          description: "Query where params"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Return a user"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/User"
+      security:
+        - jwt_bearer: ["user:read"]
+  /api/auth/authorize:
+    post:
+      operationId: authorize
+      tags:
+        - "Authorization"
+      summary: "Authorize user's credential"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: "object"
+              required:
+                - user_id
+                - password
+              properties:
+                user_id:
+                  description: "User ID (username/email)"
+                  type: "string"
+                password:
+                  description: "User Password"
+                  type: "string"
+                remember_me:
+                  description: "Remember Session"
+                  type: "boolean"
+      responses:
+        "200":
+          description: "Success authorize User"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: "Invalid username/password supplied"
+        "404":
+          description: "User not found"
+  /api/auth/token:
+    post:
+      operationId: renewToken
+      tags:
+        - "Authorization"
+      summary: "Refresh user's token"
+      parameters:
+        - name: "refresh_token"
+          in: "query"
+          description: "Valid refresh token"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Success get new user's token"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+  /api/auth/me:
+    get:
+      operationId: getIdentity
+      tags:
+        - "Authorization"
+      summary: "Get user's identity"
+      responses:
+        "200":
+          description: "Success get user's identity"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/AuthClaims"
+      security:
+        - jwt_bearer: ["owner:read"]
+  /api/auth/logout:
+    get:
+      operationId: logout
+      tags:
+        - "Authorization"
+      summary: "Logout user's session"
+      parameters:
+        - name: "id_token_hint"
+          in: "query"
+          description: "Valid previous access token"
+          required: true
+          schema:
+            type: "string"
+        - name: "post_logout_redirect_uri"
+          in: "query"
+          description: "Logout redirect uri"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Success logout user's session"
+        "302":
+          description: "Success logout user's session and redirect"
+components:
+  schemas:
+    AuthResponse:
+      type: "object"
+      required:
+        - access_token
+        - refresh_token
+        - claims
+      properties:
+        access_token:
+          type: "string"
+        refresh_token:
+          type: "string"
+        id_token:
+          type: "string"
+        claims:
+          $ref: "#/components/schemas/AuthClaims"
+    AuthClaims:
+      type: "object"
+      required:
+        - sub
+        - name
+        - nickname
+        - preferred_username
+        - email
+        - iat
+        - exp
+      properties:
+        sub:
+          type: "string"
+        name:
+          type: "string"
+        given_name:
+          type: "string"
+        family_name:
+          type: "string"
+        nickname:
+          type: "string"
+        preferred_username:
+          type: "string"
+        profile:
+          type: "string"
+        picture:
+          type: "string"
+        email:
+          type: "string"
+        email_verified:
+          type: "boolean"
+        iat:
+          type: "number"
+        exp:
+          type: "number"
+        mercusuar.pln.co.id/permissions:
+          type: "array"
+          items:
+            type: "string"
+        mercusuar.pln.co.id/scopes:
+          type: "array"
+          items:
+            type: "string"
+    UserInput:
+      type: "object"
+      required:
+        - "username"
+        - "name"
+        - "email"
+        - "password"
+        - "confirm_password"
+      properties:
+        username:
+          type: "string"
+        name:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string"
+        confirm_password:
+          type: "string"
+        roles:
+          type: "array"
+          items:
+            type: "number"
+    User:
+      type: "object"
+      properties:
+        id: 
+          type: "number"
+        username:
+          type: "string"
+        name:
+          type: "string"
+        email:
+          type: "string"
+        email_verified:
+          type: "string"
+        roles:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Role"
+    RoleInput:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        description:
+          type: "string"
+        permissions:
+          type: "array"
+          items:
+            type: "string"
+        scopes:
+          type: "array"
+          items:
+            type: "string"
+    Role:
+      type: "object"
+      properties:
+        id:
+          type: "number"
+        description:
+          type: "string"
+        permissions:
+          type: "array"
+          items:
+            type: "string"
+        scopes:
+          type: "array"
+          items:
+            type: "string"
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      in: cookie
+    jwt_bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

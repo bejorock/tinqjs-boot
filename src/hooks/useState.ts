@@ -9,9 +9,7 @@ export function useState<T>(initialValue: T): [T, (value: T) => void] {
     {},
     {
       get: (target, prop, receiver) => {
-        // console.log(wrapper.value);
         if (!wrapper.value) return undefined;
-        // console.log(prop);
         return Reflect.get(wrapper.value as any, prop, receiver);
       },
 

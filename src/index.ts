@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs";
+import { logger } from "./logger";
 
 export { default as createHttpService } from "./createHttpService";
 export { default as createHttpRoutes } from "./createHttpRoutes";
@@ -29,7 +30,7 @@ export default function main(boot: (config: any) => Promise<void>) {
   boot
     .bind(this)(config)
     .catch((err) => {
-      console.log(err);
+      logger.error(err);
       if (process.send) process.send({ type: "shutdown" });
 
       process.nextTick(() => process.exit());
@@ -44,13 +45,14 @@ const shutdown = () => {
     )
   );
 
-  console.log(config.name, " : shutting down tinqjs service...");
+  logger.warn(`${config.name} : shutting down tinqjs service...`);
 
   process.exit();
 };
 
-process.on("unhandledRejection", (reason, promise) => {
-  console.log(reason);
+process.on("unhandledRejection", (reason: any, promise) => {
+  logger.error(reason);
+  logger.error(reason.stack);
 
   if (process.send) process.send({ type: "shutdown" });
 

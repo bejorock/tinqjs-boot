@@ -12,9 +12,7 @@ export function useChannel<T>(
         mainEvent.once("push", () => resolve(true));
       });
 
-      // console.log("receive push");
       while (data.length > 0) {
-        // console.log("pull data");
         yield data[0];
 
         data.shift();

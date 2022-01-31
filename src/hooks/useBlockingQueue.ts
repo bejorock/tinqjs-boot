@@ -1,3 +1,5 @@
+import { logger } from "../logger";
+
 export function useBlockingQueue(
   handler: (item: any) => Promise<void>,
   initialData: any[] = []
@@ -9,7 +11,6 @@ export function useBlockingQueue(
       await handler(item);
     } */
 
-    // console.log("do start");
     while (data.length > 0) {
       // const item = data.shift();
 
@@ -22,7 +23,7 @@ export function useBlockingQueue(
   const push = (item: any) => {
     data.push(item);
 
-    if (data.length == 1) start().catch((err) => console.log(err));
+    if (data.length == 1) start().catch((err) => logger.error(err));
   };
 
   return push;

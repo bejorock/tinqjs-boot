@@ -1,3 +1,5 @@
+import { Request } from "express";
+
 export interface IHttpParam {
   from: "query" | "path" | "body";
   type: "string" | "number" | "boolean" | "array" | "object" | "blob";
@@ -14,4 +16,5 @@ export interface IHttpContext {
   query: any;
   params: any;
   body: any;
+  req: Partial<Request> & Partial<{ [key: string]: any }>;
 }

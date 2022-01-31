@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import path from "path";
+import { logger } from "./logger";
 import { IHttpContext } from "./types";
 
 function safeHandler(handler: (props: IHttpContext) => Promise<any>) {
@@ -9,15 +10,16 @@ function safeHandler(handler: (props: IHttpContext) => Promise<any>) {
       query: req.query,
       params: req.params,
       body: req.body,
+      req,
     };
 
     handler(props)
       .then((result) => {
-        if (typeof result === "function") result(res);
+        if (typeof result === "function") return result(res);
         else res.send(result);
       })
       .catch((err) => {
-        console.log(err);
+        logger.error(err);
         res.status(500).send(err);
       });
   };
@@ -40,7 +42,6 @@ export default function createHttpRoutes(descriptors: any) {
       routePath = routePath.replace(paramsPattern, "$1:$2$3");
     }
 
-    // console.log(module);
     for (let httpMethod in module) {
       const middlewares: any[] = module.middlewares || [];
 
