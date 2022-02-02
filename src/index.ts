@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import { logger } from "./logger";
+import { Logger } from "./logger";
 
 export { default as createHttpService } from "./createHttpService";
 export { default as createHttpRoutes } from "./createHttpRoutes";
@@ -16,6 +16,7 @@ export * from "./amqp/amqpPublish";
 export * from "./hooks/useBlockingQueue";
 export * from "./hooks/useChannel";
 export * from "./context";
+export * from "./logger";
 
 export default function main(boot: (config: any) => Promise<void>) {
   const config = JSON.parse(
@@ -30,7 +31,7 @@ export default function main(boot: (config: any) => Promise<void>) {
   boot
     .bind(this)(config)
     .catch((err) => {
-      logger.error(err);
+      Logger.logger.error(err);
       if (process.send) process.send({ type: "shutdown" });
 
       process.nextTick(() => process.exit());
@@ -45,14 +46,14 @@ const shutdown = () => {
     )
   );
 
-  logger.warn(`${config.name} : shutting down tinqjs service...`);
+  Logger.logger.warn(`shutting down tinqjs service (${config.name})...`);
 
   process.exit();
 };
 
 process.on("unhandledRejection", (reason: any, promise) => {
-  logger.error(reason);
-  logger.error(reason.stack);
+  Logger.logger.error(reason);
+  Logger.logger.error(reason.stack);
 
   if (process.send) process.send({ type: "shutdown" });
 

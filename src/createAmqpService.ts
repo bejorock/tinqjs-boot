@@ -1,11 +1,11 @@
 import amqplib from "amqplib/callback_api";
 import EventEmitter from "events";
+import { Logger } from ".";
 import { amqpChannel } from "./amqp/amqpChannel";
 import { amqpConnect } from "./amqp/amqpConnect";
 import { amqpEvent } from "./context";
 import { useChannel } from "./hooks/useChannel";
 import { useState } from "./hooks/useState";
-import { logger } from "./logger";
 
 function createConnection(
   host: string,
@@ -16,20 +16,20 @@ function createConnection(
     .then((conn) => {
       // reset delay
       delay = 100;
-      logger.info("amqp connection ready!");
+      Logger.logger.info("amqp connection ready!");
 
       conn.on("close", () => {
-        logger.info("amqp connection to amqp server lost");
-        logger.info("amqp retry connecting...");
+        Logger.logger.info("amqp connection to amqp server lost");
+        Logger.logger.info("amqp retry connecting...");
 
         setTimeout(() => createConnection(host, onReconnect, delay), delay);
       });
 
-      return onReconnect(conn).catch((err) => logger.error(err));
+      return onReconnect(conn).catch((err) => Logger.logger.error(err));
     })
     .catch((err) => {
-      logger.error(err.message);
-      logger.error("amqp fail to connect, retry connecting...");
+      Logger.logger.error(err.message);
+      Logger.logger.error("amqp fail to connect, retry connecting...");
       setTimeout(() => createConnection(host, onReconnect, delay * 2), delay);
     });
 }
@@ -56,7 +56,7 @@ export default async function createAmqpService(host: string) {
         }
       );
     } catch (e) {
-      logger.error(e);
+      Logger.logger.error(e);
     }
   });
 

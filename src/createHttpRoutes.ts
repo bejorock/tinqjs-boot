@@ -1,10 +1,10 @@
 import { Request, Response, Router } from "express";
 import path from "path";
-import { logger } from "./logger";
+import { Logger } from ".";
 import { IHttpContext } from "./types";
 
 function safeHandler(handler: (props: IHttpContext) => Promise<any>) {
-  return (req: Request, res: Response) => {
+  return (req: Request, res: Response, next: Function) => {
     const props: IHttpContext = {
       headers: req.headers,
       query: req.query,
@@ -13,15 +13,24 @@ function safeHandler(handler: (props: IHttpContext) => Promise<any>) {
       req,
     };
 
-    handler(props)
+    (async () => {
+      const result = await handler(props);
+      if (typeof result === "function") await result(res, next);
+      else res.send(result);
+    })().catch((err) => {
+      Logger.logger.error(err);
+      res.status(500).send(err);
+    });
+
+    /* handler(props)
       .then((result) => {
         if (typeof result === "function") return result(res);
         else res.send(result);
       })
       .catch((err) => {
-        logger.error(err);
+        Logger.logger.error(err);
         res.status(500).send(err);
-      });
+      }); */
   };
 }
 

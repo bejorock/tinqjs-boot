@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
 import { Request, Response } from "express";
 import { Stream } from "stream";
-import { logger } from "./logger";
+import { Logger } from ".";
 
 export const amqpEvent = new EventEmitter();
 
@@ -97,7 +97,7 @@ export const BuildRoute =
         .then((write) => write(res))
         .then((done) => !done && next())
         .catch((err) => {
-          logger.error(err);
+          Logger.logger.error(err);
 
           if (res.writable) res.send(err);
         });

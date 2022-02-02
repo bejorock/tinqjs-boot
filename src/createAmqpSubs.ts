@@ -1,10 +1,10 @@
 import amqp from "amqplib/callback_api";
 import path from "path";
+import { Logger } from ".";
 import { amqpExchange } from "./amqp/amqpExchange";
 import { amqpQueue } from "./amqp/amqpQueue";
 import { useBlockingQueue } from "./hooks/useBlockingQueue";
 import { useChannel } from "./hooks/useChannel";
-import { logger } from "./logger";
 
 export default async function createAmqpSubs(
   channel: amqp.Channel,
@@ -55,12 +55,14 @@ export default async function createAmqpSubs(
         for await (let message of messages()) {
           await module[queueName](message);
         }
-      })().catch((err) => logger.error(err));
+      })().catch((err) => Logger.logger.error(err));
 
       channel.consume(
         queue.queue,
         function (msg) {
-          logger.info(`Receive message for key ${msg.fields.routingKey}`);
+          Logger.logger.info(
+            `Receive message for key ${msg.fields.routingKey}`
+          );
 
           let routingKeyTokens = msg.fields.routingKey.split(".");
           let keyTokens = key.split(".");
@@ -77,7 +79,7 @@ export default async function createAmqpSubs(
           try {
             envelope = JSON.parse(envelope);
           } catch (e) {
-            logger.error(`Not a json message`);
+            Logger.logger.error(`Not a json message`);
           }
 
           pushMessage({ body: envelope.content, params: paramValues });
@@ -89,7 +91,7 @@ export default async function createAmqpSubs(
         }
       );
 
-      logger.info(
+      Logger.logger.info(
         `Ready queue ${queueName.toLowerCase()}.${alias} of topic ${topic}`
       );
     }

@@ -1,4 +1,4 @@
-import { Request } from "express";
+import { Request, Response } from "express";
 
 export interface IHttpParam {
   from: "query" | "path" | "body";

@@ -1,4 +1,4 @@
-import { logger } from "../logger";
+import { Logger } from "..";
 
 export function useBlockingQueue(
   handler: (item: any) => Promise<void>,
@@ -23,7 +23,7 @@ export function useBlockingQueue(
   const push = (item: any) => {
     data.push(item);
 
-    if (data.length == 1) start().catch((err) => logger.error(err));
+    if (data.length == 1) start().catch((err) => Logger.logger.error(err));
   };
 
   return push;
