@@ -29,6 +29,20 @@ const esbuildOptions = {
 async function buildEsm(files_) {
   return await esbuild
     .build({
+      outfile: "dist/index.esm.js",
+      format: "esm",
+      platform: "node",
+      target: "esnext",
+      // inject: ["./react-shim.js"],
+      entryPoints: files_,
+      ...esbuildOptions,
+    })
+    .catch(() => process.exit(1));
+}
+
+async function buildCjs(files_) {
+  return await esbuild
+    .build({
       outfile: "dist/index.js",
       format: "cjs",
       platform: "node",
@@ -43,7 +57,7 @@ async function buildEsm(files_) {
 const files = ["src/index.ts"];
 
 buildEsm(files)
-  // .then(() => buildEsm(files))
+  .then(() => buildCjs(files))
   .then(() =>
     new Generator({
       entry: "index.ts",
@@ -52,7 +66,7 @@ buildEsm(files)
       .generate()
       .then(() => console.log("create index.d.ts"))
   )
-  .then(() =>
+  /* .then(() =>
     fs.writeFileSync(
       "dist/package.json",
       JSON.stringify(
@@ -74,7 +88,7 @@ buildEsm(files)
       "utf-8"
     )
   )
-  .then(() => console.log("create package.json"))
-  .then(() => fs.copyFileSync("README.md", "dist/README.md"))
+  .then(() => console.log("create package.json")) */
+  // .then(() => fs.copyFileSync("README.md", "dist/README.md"))
   .catch((err) => console.log(err))
   .finally(() => process.exit(0));
