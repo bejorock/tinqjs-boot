@@ -18,5 +18,7 @@ export default function createHttpService(handler: RequestListener) {
   return function listen(port: number, cb: () => void) {
     if (process.send || process.env.CHILD) server.listen(PATH, cb);
     else server.listen(port, cb);
+
+    return server;
   };
 }
