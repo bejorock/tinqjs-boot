@@ -3,7 +3,7 @@ import path from "path";
 import http from "http";
 import os from "os";
 
-export default function createHttpService(handler: RequestListener) {
+export const createHttpService = (handler: RequestListener) => {
   const PATH = path.join(
     os.platform() === "win32" ? "\\\\?\\pipe" : "/tmp",
     process.argv[2] || "default"
@@ -21,4 +21,4 @@ export default function createHttpService(handler: RequestListener) {
 
     return server;
   };
-}
+};

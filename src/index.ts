@@ -2,20 +2,8 @@ import path from "path";
 import fs from "fs";
 import { Logger } from "./logger";
 
-export { default as createHttpService } from "./createHttpService";
-export { default as createHttpRoutes } from "./createHttpRoutes";
-export { default as createAmqpService } from "./createAmqpService";
-export { default as createAmqpSubs } from "./createAmqpSubs";
+export * from "./createHttpService";
 export * from "./types";
-export * from "./http/httpParams";
-export * from "./amqp/amqpChannel";
-export * from "./amqp/amqpConnect";
-export * from "./amqp/amqpQueue";
-export * from "./amqp/amqpExchange";
-export * from "./amqp/amqpPublish";
-export * from "./hooks/useBlockingQueue";
-export * from "./hooks/useChannel";
-export * from "./context";
 export * from "./logger";
 
 export default function main(boot: (config: any) => Promise<void>) {

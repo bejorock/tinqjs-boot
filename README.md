@@ -1,5 +1,7 @@
 # TIN JS BOOT PLUGIN
 
+## IMPORTANT!!! BREAKING CHANGES IS WORK IN PROGRESS
+
 A complementary plugin for [@tinqjs-cli](https://github.com/bejorock/tinqjs-cli) to enable http in a service
 
 ## Installation
